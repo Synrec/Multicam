@@ -146,7 +146,7 @@
 	Spriteset_Map.prototype.createNewCamera = function(camera, index) {
 		var tw = $gameMap.tileWidth();
 		var th = $gameMap.tileHeight();
-		var texture = PIXI.RenderTexture.create(camera.width * tw, camera.height * th);
+		var texture = PIXI.RenderTexture.create({width: camera.width * tw, height: camera.height * th});
 		var sprite = new PIXI.Sprite(texture);
 		sprite.x = camera.x * tw;
 		sprite.y = camera.y * th;
@@ -169,6 +169,7 @@
 			}
 		}
 		this._cameraContainer.addChildAt(sprite, i + 1);
+		console.log(sprite)
 	};
 
 	Spriteset_Map.prototype.createAllCameras = function() {
@@ -211,9 +212,11 @@
 		this.updateTilemap();
 		this._characterSprites.forEach(function(character) {
 			character.updatePosition();
-			character._animationSprites.forEach(function(animation) {
-				animation.updatePosition();
-			});
+			if(Array.isArray(character._animationSprites)){
+				character._animationSprites.forEach(function(animation) {
+					animation.updatePosition();
+				});
+			}
 			character.updateBalloon();
 		});
 		this.updateShadow();

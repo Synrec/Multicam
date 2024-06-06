@@ -167,6 +167,7 @@
 		var tw = $gameMap.tileWidth();
 		var th = $gameMap.tileHeight();
 		var texture = new PIXI.RenderTexture.create({width: camera.width * tw, height: camera.height * th});
+		texture.texture = texture;
 		var sprite = new PIXI.Sprite(texture);
 		sprite.x = camera.x * tw;
 		sprite.y = camera.y * th;
@@ -212,7 +213,7 @@
 
 	//マップ画面をそれぞれのカメラが映す位置までスクロールした上で、カメラのTextureに描画していく
 	Spriteset_Map.prototype.renderCameras = function() {
-		if (this._cameras) {
+		if (Array.isArray(this._cameras)) {
 			var displayPos = $gameMap.saveDisplayPos();
 			this._baseSprite.visible = true;
 			this._cameras.forEach(function(camera, index) {
@@ -222,7 +223,15 @@
 					const renderer = PIXI.autoDetectRenderer();
 					const texture = camera.texture;
 					const sprite = this._baseSprite;
-					renderer.render(sprite, texture);
+					console.log(texture)
+					renderer.render(
+						sprite, 
+						{
+							texture:texture, 
+							baseTexture:texture.baseTexture, 
+							frame: {x:0,y:0,width:240,height:240}
+						}
+					);
 				}else{
 					Graphics._renderer.render(this._baseSprite, camera.texture);
 				}

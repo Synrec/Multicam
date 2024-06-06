@@ -166,7 +166,7 @@
 	Spriteset_Map.prototype.createNewCamera = function(camera, index) {
 		var tw = $gameMap.tileWidth();
 		var th = $gameMap.tileHeight();
-		var texture = new PIXI.RenderTexture.create(new PIXI.BaseRenderTexture, {width: camera.width * tw, height: camera.height * th});
+		var texture = new PIXI.RenderTexture.create({width: camera.width * tw, height: camera.height * th});
 		var sprite = new PIXI.Sprite(texture);
 		sprite.x = camera.x * tw;
 		sprite.y = camera.y * th;
@@ -220,8 +220,7 @@
 				this.changePositions();
 				if(Utils.RPGMAKER_NAME == "MZ"){
 					const renderer = PIXI.autoDetectRenderer();
-					console.log(camera.texture)
-					renderer.render(camera.sprite, {texture:camera.texture});
+					renderer.render(this._baseSprite, {texture:camera.texture});
 				}else{
 					Graphics._renderer.render(this._baseSprite, camera.texture);
 				}

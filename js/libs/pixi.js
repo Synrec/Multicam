@@ -20355,7 +20355,6 @@ var PIXI = (function (exports) {
 	        var resolution;
 	        if (renderTexture) {
 	            baseTexture = renderTexture.baseTexture;
-				if(!baseTexture)console.log(renderTexture)
 	            resolution = baseTexture.resolution;
 	            if (!sourceFrame) {
 	                tempRect.width = renderTexture.frame.width;

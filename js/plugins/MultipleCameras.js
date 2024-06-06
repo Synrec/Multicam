@@ -221,7 +221,8 @@
 				if(Utils.RPGMAKER_NAME == "MZ"){
 					const renderer = PIXI.autoDetectRenderer();
 					const texture = camera.texture;
-					renderer.render(this._baseSprite, texture);
+					const sprite = this._baseSprite;
+					renderer.render(sprite, texture);
 				}else{
 					Graphics._renderer.render(this._baseSprite, camera.texture);
 				}

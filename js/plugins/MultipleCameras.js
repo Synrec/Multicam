@@ -167,7 +167,6 @@
 		var tw = $gameMap.tileWidth();
 		var th = $gameMap.tileHeight();
 		var texture = new PIXI.RenderTexture.create({width: camera.width * tw, height: camera.height * th});
-		texture.texture = texture;
 		var sprite = new PIXI.Sprite(texture);
 		sprite.x = camera.x * tw;
 		sprite.y = camera.y * th;
@@ -222,14 +221,15 @@
 				if(Utils.RPGMAKER_NAME == "MZ"){
 					const renderer = PIXI.autoDetectRenderer();
 					const texture = camera.texture;
+					camera.sprite.frame = (texture.frame);
 					const sprite = this._baseSprite;
-					console.log(texture)
 					renderer.render(
 						sprite, 
 						{
 							texture:texture, 
+							renderTexture:texture, 
 							baseTexture:texture.baseTexture, 
-							frame: {x:0,y:0,width:240,height:240}
+							frame: texture.frame //Not loading properly from pixijs.
 						}
 					);
 				}else{

@@ -127,6 +127,26 @@
 		return _Bitmap_snap.apply(this, arguments);
 	};
 
+	let _ScnMngr_UpdtMain = SceneManager.updateMain;
+	SceneManager.updateMain = function() {
+		_ScnMngr_UpdtMain.call(this, ...arguments);
+		this.updateCameraRender();
+	}
+
+	SceneManager.updateCameraRender = function(){
+		const stage = this._scene;
+		if (
+			stage instanceof Scene_Map &&
+			Utils.RPGMAKER_NAME == "MZ" &&
+			this._need_update_renderer
+		) {
+			const spriteset = stage._spriteset;
+			if(!spriteset)return;
+			spriteset.renderCameras();
+			this._need_update_renderer = false;
+		}
+	}
+
 	//カメラの後ろの遠景と、カメラのコンテナを作る
 	var _Spriteset_Map_createBaseSprite = Spriteset_Map.prototype.createBaseSprite;
 	Spriteset_Map.prototype.createBaseSprite = function() {
@@ -146,7 +166,7 @@
 	Spriteset_Map.prototype.createNewCamera = function(camera, index) {
 		var tw = $gameMap.tileWidth();
 		var th = $gameMap.tileHeight();
-		var texture = PIXI.RenderTexture.create({width: camera.width * tw, height: camera.height * th});
+		var texture = new PIXI.RenderTexture.create(new PIXI.BaseRenderTexture, {width: camera.width * tw, height: camera.height * th});
 		var sprite = new PIXI.Sprite(texture);
 		sprite.x = camera.x * tw;
 		sprite.y = camera.y * th;
@@ -169,6 +189,7 @@
 			}
 		}
 		this._cameraContainer.addChildAt(sprite, i + 1);
+		SceneManager._need_update_renderer = true;
 	};
 
 	Spriteset_Map.prototype.createAllCameras = function() {
@@ -195,10 +216,15 @@
 			var displayPos = $gameMap.saveDisplayPos();
 			this._baseSprite.visible = true;
 			this._cameras.forEach(function(camera, index) {
-				console.log(camera)
 				$gameMap.scrollDisplayPos(index);
 				this.changePositions();
-				Graphics._renderer.render(this._baseSprite, camera.texture);
+				if(Utils.RPGMAKER_NAME == "MZ"){
+					const renderer = PIXI.autoDetectRenderer();
+					console.log(camera.texture)
+					renderer.render(camera.sprite, {texture:camera.texture});
+				}else{
+					Graphics._renderer.render(this._baseSprite, camera.texture);
+				}
 			}, this);
 			$gameMap.restoreDisplayPos(displayPos);
 			this.changePositions();
@@ -217,7 +243,7 @@
 					animation.updatePosition();
 				});
 			}
-			character.updateBalloon();
+			if(character.updateBalloon)character.updateBalloon();
 		});
 		this.updateShadow();
 		this._destinationSprite.updatePosition();

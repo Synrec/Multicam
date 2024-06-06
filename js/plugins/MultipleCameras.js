@@ -169,7 +169,6 @@
 			}
 		}
 		this._cameraContainer.addChildAt(sprite, i + 1);
-		console.log(sprite)
 	};
 
 	Spriteset_Map.prototype.createAllCameras = function() {
@@ -196,6 +195,7 @@
 			var displayPos = $gameMap.saveDisplayPos();
 			this._baseSprite.visible = true;
 			this._cameras.forEach(function(camera, index) {
+				console.log(camera)
 				$gameMap.scrollDisplayPos(index);
 				this.changePositions();
 				Graphics._renderer.render(this._baseSprite, camera.texture);

@@ -220,7 +220,8 @@
 				this.changePositions();
 				if(Utils.RPGMAKER_NAME == "MZ"){
 					const renderer = PIXI.autoDetectRenderer();
-					renderer.render(this._baseSprite, {texture:camera.texture});
+					const texture = camera.texture;
+					renderer.render(this._baseSprite, {texture});
 				}else{
 					Graphics._renderer.render(this._baseSprite, camera.texture);
 				}
